@@ -13,4 +13,10 @@ public partial class CB3Veler : CNode<CharacterBody3D>
     {
         CB3 = ENode as CharacterBody3D;
     }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        CB3.Velocity = Vel;
+        CB3.MoveAndSlide();
+    }
 }
