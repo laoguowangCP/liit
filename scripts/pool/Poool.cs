@@ -41,21 +41,26 @@ public class Poool<T> where T : new()
     public virtual T Take()
     {
         _pool.TryDequeue(out var o);
+
+        // Pool is empty
         if (o is null)
         {
-            o = _pCreate();
+            return _pCreate();
         }
 
+        --_size;
         return o;
     }
 
     public virtual void GiveBack(T o)
     {
+        // Pool is filled
         if (_size >= _sizeMax)
         {
             return;
         }
 
+        // Reset and back to pool
         if (_pReset(o))
         {
             _pool.Enqueue(o);
@@ -74,7 +79,7 @@ public class Pooolicy<T> where T : new()
     public virtual T Create() { return new T(); }
 
     /// <summary>
-    ///  Reset before give back. No reset by default.
+    ///  Reset before give back. Do nothing by default.
     /// </summary>
     public virtual bool Reset(T obj) { return true; }
 }

@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://cqrslchap4mtc"]
+
+[node name="LiitPlayer" type="CharacterBody3D"]
