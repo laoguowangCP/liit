@@ -242,7 +242,7 @@ public partial class State : StatechartComposition
 		return StateComponent.LoadActiveStateConfig(ref config, ref configIdx);
 	}
 
-#if TOOLS
+	#if TOOLS
     public override string[] _GetConfigurationWarnings()
 	{
 		List<string> warnings = new List<string>();

@@ -3,20 +3,18 @@ using Godot;
 namespace LGWCP.Godot.Liit;
 
 
-public partial class CB3Veler : CNode<CharacterBody3D>
+public partial class CB3Mover : NodeC<CharacterBody3D>
 {
-    protected CharacterBody3D CB3;
     public Vector3 Vel { get; set; }
-
 
     public override void _Ready()
     {
-        CB3 = ENode as CharacterBody3D;
+        Vel = Vector3.Zero;
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        CB3.Velocity = Vel;
-        CB3.MoveAndSlide();
+        Entity.Velocity = Vel;
+        Entity.MoveAndSlide();
     }
 }

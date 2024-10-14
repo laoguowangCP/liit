@@ -6,10 +6,10 @@ namespace LGWCP.Godot.Liit;
 
 
 [Tool]
-public partial class CNode<T> : Node, IComponent
+public partial class NodeC<T> : Node, IComponent
     where T : Node
 {
-    protected Node ENode;
+    public T Entity { get; protected set; }
 
     public Type Require()
     {
@@ -18,33 +18,35 @@ public partial class CNode<T> : Node, IComponent
 
     public override void _Ready()
     {
-        ENode = this;
-        do
-        {
-            ENode = ENode.GetParentOrNull<Node>();
-        } while (ENode is not null && ENode is IComponent);
+        Entity = GetParentOrNull<T>();
 
-        #if DEBUG
+        #if TOOLS
         if (Engine.IsEditorHint())
         {
             UpdateConfigurationWarnings();
+            RequestReady();
         }
         #endif
     }
 
 
-    #if DEBUG
+    #if TOOLS
     public override string[] _GetConfigurationWarnings()
     {
-        var warnings = new List<string>();
+        List<string> warnings = new List<string>();
 
-        if (ENode is null)
+        if (Entity is null)
         {
-            warnings.Add("CNode needs ancestor non-cnode.");
+            warnings.Add("CNode needs parent non-cnode.");
         }
-        else if (ENode is not T)
+        else if (Entity is not T _)
         {
             warnings.Add("CNode needs ancestor with type: " + typeof(T).ToString());
+        }
+
+        if (warnings.Count > 0)
+        {
+            warnings.Add("To use custom class as parent entity, set it tool and globalclass");
         }
 
         return warnings.ToArray();

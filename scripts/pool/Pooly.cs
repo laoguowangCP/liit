@@ -1,30 +1,24 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using Godot;
 
 
 /*
-    Poool: extra objects in pool. A simple object pooler.
-                 ^          ^^^^
+    Pooly: a simple object pooler.
 */
 
-namespace LGWCP.Godot.Poool;
+namespace LGWCP.Godot.Pooly;
 
-public class Poool<T> where T : new()
+public class Pooly<T> where T : new()
 {
     private protected readonly Queue<T> _pool = new();
     private protected T _firstInPool;
     private readonly int _sizeMax;
     private int _size;
-    private Pooolicy<T> _p;
     private Func<T> _pCreate;
     private Func<T, bool> _pReset;
 
-    public Poool(int sizeInit, int sizeMax, Pooolicy<T> pooolicy)
+    public Pooly(int sizeInit, int sizeMax, Poolicy<T> pooolicy)
     {
-        _p = pooolicy;
         _pCreate = pooolicy.Create;
         _pReset = pooolicy.Reset;
         _size = Math.Min(sizeInit, sizeMax);
@@ -74,7 +68,7 @@ public class Poool<T> where T : new()
     Pooolicy: policy for Poool.
 */
 
-public class Pooolicy<T> where T : new()
+public class Poolicy<T> where T : new()
 {
     public virtual T Create() { return new T(); }
 
