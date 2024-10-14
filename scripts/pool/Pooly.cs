@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 
 /*
-    Pooly: a simple object pooler.
+    Pooly: simply object pool.
+                ^        ^^^^
 */
 
 namespace LGWCP.Godot.Pooly;

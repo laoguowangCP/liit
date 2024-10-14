@@ -9,6 +9,9 @@ namespace LGWCP.Godot.Liit;
 public partial class NodeC<T> : Node, IComponent
     where T : Node
 {
+    [ExportGroup("EventFlag")]
+    [Export(PropertyHint.Flags, "Process,Physics Process,Input,Shortcut Input,UnhandledKey Input,Unhandled Input")]
+	public EventFlagEnum EventFlag { get; set; } = 0;
     public T Entity { get; protected set; }
 
     public Type Require()
@@ -20,36 +23,42 @@ public partial class NodeC<T> : Node, IComponent
     {
         Entity = GetParentOrNull<T>();
 
-        #if TOOLS
-        if (Engine.IsEditorHint())
-        {
-            UpdateConfigurationWarnings();
-            RequestReady();
-        }
+        #if DEBUG
+        CheckEntity();
         #endif
+
+        SetProcess(
+			EventFlag.HasFlag(EventFlagEnum.Process));
+		SetPhysicsProcess(
+			EventFlag.HasFlag(EventFlagEnum.PhysicsProcess));
+		SetProcessInput(
+			EventFlag.HasFlag(EventFlagEnum.Input));
+		SetProcessShortcutInput(
+			EventFlag.HasFlag(EventFlagEnum.ShortcutInput));
+		SetProcessUnhandledKeyInput(
+			EventFlag.HasFlag(EventFlagEnum.UnhandledKeyInput));
+		SetProcessUnhandledInput(
+			EventFlag.HasFlag(EventFlagEnum.UnhandledInput));
     }
 
-
-    #if TOOLS
-    public override string[] _GetConfigurationWarnings()
+    #if DEBUG
+    public void CheckEntity()
     {
-        List<string> warnings = new List<string>();
-
         if (Entity is null)
         {
-            warnings.Add("CNode needs parent non-cnode.");
+            GD.PushWarning(GetPath(), ": need parent with type ", typeof(T));
         }
-        else if (Entity is not T _)
-        {
-            warnings.Add("CNode needs ancestor with type: " + typeof(T).ToString());
-        }
-
-        if (warnings.Count > 0)
-        {
-            warnings.Add("To use custom class as parent entity, set it tool and globalclass");
-        }
-
-        return warnings.ToArray();
     }
     #endif
+}
+
+[Flags]
+public enum EventFlagEnum
+{
+    Process = 1,
+    PhysicsProcess = 2,
+    Input = 4,
+    ShortcutInput = 8,
+    UnhandledKeyInput = 16,
+    UnhandledInput = 32,
 }

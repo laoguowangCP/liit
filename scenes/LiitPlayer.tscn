@@ -1,12 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://cqrslchap4mtc"]
+[gd_scene load_steps=5 format=3 uid="uid://cqrslchap4mtc"]
 
 [ext_resource type="Script" path="res://scripts/entities/LiitPlayer.cs" id="1_i8igk"]
 [ext_resource type="Script" path="res://scripts/pool/TestPooly.cs" id="2_ou2fl"]
+[ext_resource type="Script" path="res://scripts/components/CB3RotMove.cs" id="2_r256e"]
+[ext_resource type="Script" path="res://scripts/components/Mot3Cal.cs" id="3_q4vdc"]
 
 [node name="LiitPlayer" type="CharacterBody3D"]
 script = ExtResource("1_i8igk")
 
-[node name="Node" type="Node" parent="."]
+[node name="CB3RotMove" type="Node" parent="."]
+script = ExtResource("2_r256e")
+EventFlag = 2
+
+[node name="Mot3Cal" type="Node" parent="CB3RotMove"]
+script = ExtResource("3_q4vdc")
+EventFlag = 63
 
 [node name="TestPooly" type="Node" parent="."]
 script = ExtResource("2_ou2fl")
