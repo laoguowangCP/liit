@@ -6,12 +6,19 @@ namespace LGWCP.Godot.Liit;
 
 
 [Tool]
-public partial class NodeC<T> : Node, IComponent
+public partial class NodeComponent<T> : Node, IComponent
     where T : Node
 {
     [ExportGroup("EventFlag")]
     [Export(PropertyHint.Flags, "Process,Physics Process,Input,Shortcut Input,UnhandledKey Input,Unhandled Input")]
 	public EventFlagEnum EventFlag { get; set; } = 0;
+
+    /// <summary>
+    /// If is submit, component will submit itself as parent node's component, while parent node will be submitted as entity.
+    /// </summary>
+    [Export]
+    protected bool IsSubmit = false;
+
     public T Entity { get; protected set; }
 
     public Type Require()
@@ -22,10 +29,6 @@ public partial class NodeC<T> : Node, IComponent
     public override void _Ready()
     {
         Entity = GetParentOrNull<T>();
-
-        #if DEBUG
-        CheckEntity();
-        #endif
 
         SetProcess(
 			EventFlag.HasFlag(EventFlagEnum.Process));
@@ -39,17 +42,25 @@ public partial class NodeC<T> : Node, IComponent
 			EventFlag.HasFlag(EventFlagEnum.UnhandledKeyInput));
 		SetProcessUnhandledInput(
 			EventFlag.HasFlag(EventFlagEnum.UnhandledInput));
-    }
 
-    #if DEBUG
-    public void CheckEntity()
-    {
         if (Entity is null)
         {
+            #if DEBUG
             GD.PushWarning(GetPath(), ": need parent with type ", typeof(T));
+            #endif
+            return;
+        }
+
+        if (IsSubmit)
+        {
+            ICE.Manager.SubmitComponent<T>(Entity);
         }
     }
-    #endif
+
+    public override void _ExitTree()
+    {
+        ICE.Manager.TryEraseEntity(Entity);
+    }
 }
 
 [Flags]

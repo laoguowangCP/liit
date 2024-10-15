@@ -6,7 +6,7 @@ namespace LGWCP.Godot.Liit;
 
 
 [Tool]
-public partial class Stater : NodeC<Node>
+public partial class Stater : NodeComponent<Node>
 {
     protected Statechart _sc;
 

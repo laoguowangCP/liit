@@ -8,7 +8,7 @@ namespace LGWCP.Godot.Liit;
 /// <summary>
 /// Hold movement commands, calculate move vel and rotY, send to CB3RotMove
 /// </summary>
-public partial class Mot3Cal : NodeC<CharacterBody3D>
+public partial class Mot3Cal : NodeComponent<CharacterBody3D>
 {
     protected CB3RotMove CB3RotMove;
     protected Vector3 Vel;
