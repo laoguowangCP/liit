@@ -1,11 +1,11 @@
 /*
-    Interfaces for Entity-Component framework
-    ^              ^      ^
+    An Intuitive Entity-Component framework for godot
+       ^         ^      ^
+    Non-intrusive: no need to extend every node, no need to migrate every thing into ECS
 */
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
 using LGWCP.Godot.Extensions;
 

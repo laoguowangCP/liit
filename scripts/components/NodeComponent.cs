@@ -1,23 +1,21 @@
 using System;
-using System.Collections.Generic;
 using Godot;
 
 namespace LGWCP.Godot.Liit;
 
 
-[Tool]
 public partial class NodeComponent<T> : Node, IComponent
     where T : Node
 {
-    [ExportGroup("EventFlag")]
-    [Export(PropertyHint.Flags, "Process,Physics Process,Input,Shortcut Input,UnhandledKey Input,Unhandled Input")]
-	public EventFlagEnum EventFlag { get; set; } = 0;
-
     /// <summary>
     /// If is submit, component will submit itself as parent node's component, while parent node will be submitted as entity.
     /// </summary>
     [Export]
     protected bool IsSubmit = false;
+
+    [ExportGroup("EventFlag")]
+    [Export(PropertyHint.Flags, "Process,Physics Process,Input,Shortcut Input,UnhandledKey Input,Unhandled Input")]
+	public EventFlagEnum EventFlag { get; set; } = 0;
 
     public T Entity { get; protected set; }
 

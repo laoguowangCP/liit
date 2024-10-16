@@ -14,6 +14,14 @@ public static class NodeExtension
     public static T GetMonoOrNull<T>(this Node node)
         where T : Node
     {
+        if (node is null)
+        {
+            #if DEBUG
+            GD.PushWarning("Node is null.");
+            #endif
+            return null;
+        }
+
         T mono = null;
         var children = node.GetChildren().ToArray();
 
@@ -53,6 +61,12 @@ public static class NodeExtension
         #endif
     }
 
+    public static bool HasMono<T>(this Node node)
+        where T : Node
+    {
+        return false;
+    }
+
     /// <summary>
     /// Return sibling "mono", first sibling of this node with given type.
     /// </summary>
@@ -62,6 +76,14 @@ public static class NodeExtension
     public static T GetMonoSiblingOrNull<T>(this Node node)
         where T : Node
     {
+        if (node is null)
+        {
+            #if DEBUG
+            GD.PushWarning("Node is null.");
+            #endif
+            return null;
+        }
+        
         var parent = node.GetParentOrNull<Node>();
         if (parent is null)
         {
@@ -75,6 +97,7 @@ public static class NodeExtension
         var children = parent.GetChildren().ToArray();
 
         #if DEBUG
+        // In debug, also check sibling is mono
         foreach (var child in children)
         {
             if (child != node && child is T t)
@@ -109,5 +132,30 @@ public static class NodeExtension
         return mono;
 
         #endif
+    }
+
+    public static bool HasMonoSibling<T>(this Node node)
+        where T : Node
+    {
+        var parent = node.GetParentOrNull<Node>();
+        if (parent is null)
+        {
+            #if DEBUG
+            GD.PushWarning(node.GetPath(), " has no parent.");
+            #endif
+            return false;
+        }
+
+        var children = parent.GetChildren().ToArray();
+
+        foreach (var child in children)
+        {
+            if (child != node && child is T _)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
