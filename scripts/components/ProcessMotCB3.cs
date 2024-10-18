@@ -12,30 +12,36 @@ namespace LGWCP.Godot.Liit;
 public partial class ProcessMotCB3 : NodeComponent<CharacterBody3D>
 {
     [Export]
-    protected ProcessMotImpl ProcessMot;
+    protected ProcessMotImpl Impl;
 
     protected float JumpVelocity;
 
     public Vector2 Dir { get; set; }
     protected Vector3 Vel;
     protected float RotY;
-    protected RotMoveCB3 CB3RotMove;
+    protected RotMoveCB3 RotMoveCB3;
     protected float Gravity;
+
+    // Input action StringName cached
+    protected StringName ActionJump;
 
 
     public override void _Ready()
     {
         base._Ready();
-        CB3RotMove = this.GetMonoSiblingOrNull<RotMoveCB3>();
+        RotMoveCB3 = this.GetMonoSiblingOrNull<RotMoveCB3>();
 
-        JumpVelocity = ProcessMot.JumpVelocity;
-        Gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle() * ProcessMot.GravityRatio;
+        JumpVelocity = Impl.JumpVelocity;
+        Gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle() * Impl.GravityRatio;
+
+        // Cache input action StringName
+        ActionJump = Impl.ActionJump;
     }
 
     public void RI_Jump(StatechartDuct duct)
     {
 		// Handle Jump.
-		if (Input.IsActionJustPressed("Space") && Entity.IsOnFloor())
+		if (Input.IsActionJustPressed(ActionJump) && Entity.IsOnFloor())
 		{
 			Vel.Y = JumpVelocity;
 		}
@@ -51,7 +57,7 @@ public partial class ProcessMotCB3 : NodeComponent<CharacterBody3D>
 
     public void RI_CommitRotMove(StatechartDuct _)
     {
-        
-        CB3RotMove.Vel = Vel;
+        // Commit processed motion to RotMove
+        RotMoveCB3.Vel = Vel;
     }
 }
