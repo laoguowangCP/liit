@@ -3,7 +3,7 @@ using LGWCP.Godot.Extensions;
 
 namespace LGWCP.Godot.Liit;
 
-public partial class BarComponent : NodeComponent<Node>
+public partial class FooComponent : NodeComponent<Node, FooComponent>
 {
     public override void _Ready()
     {

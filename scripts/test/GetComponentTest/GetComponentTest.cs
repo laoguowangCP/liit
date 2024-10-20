@@ -8,7 +8,7 @@ public partial class GetComponentTest : Node
 {
     public override void _Ready()
     {
-        for (int _ = 0; _ < 1000; ++_)
+        for (int _ = 0; _ < 100_000; ++_)
         {
             var node = new Node();
             node.AddChild(new FooComponent(), true);
@@ -28,9 +28,9 @@ public partial class GetComponentTest : Node
         int cnt0 = 0;
         foreach (var child in children)
         {
-            var foo = child.GetNodeOrNull<FooComponent>("FooComponent");
-            var bar = child.GetNodeOrNull<BarComponent>("BarComponent");
-            if (foo is not null && bar is not null)
+            var foo = child.GetNodeOrNull<FooComponent>("Node");
+            var bar = child.GetNodeOrNull<BarComponent>("Node2");
+            if (foo is not null)
             {
                 ++cnt0;
             }
@@ -42,9 +42,9 @@ public partial class GetComponentTest : Node
         int cnt1 = 0;
         foreach (var child in children)
         {
-            var foo = ICE.Manager.GetComponent<FooComponent>(child);
-            var bar = ICE.Manager.GetComponent<BarComponent>(child);
-            if (foo is not null && bar is not null)
+            var foo = ICE.Manager.GetComponent<Node, FooComponent>(child);
+            var bar = ICE.Manager.GetComponent<Node, FooComponent>(child);
+            if (foo is not null)
             {
                 ++cnt1;
             }

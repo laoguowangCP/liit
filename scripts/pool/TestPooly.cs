@@ -5,7 +5,7 @@ using Godot;
 namespace LGWCP.Godot.Liit;
 
 [Tool]
-public partial class TestPooly : NodeComponent<LiitPlayer>
+public partial class TestPooly : NodeComponent<LiitPlayer, TestPooly>
 {
     public override void _Ready()
     {

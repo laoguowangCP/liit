@@ -9,7 +9,7 @@ namespace LGWCP.Godot.Liit;
 /// <summary>
 /// Hold movement commands, calculate move vel and rotY, send to RotMoveCB3. Connect many thing to statechart.
 /// </summary>
-public partial class ProcessMotCB3 : NodeComponent<CharacterBody3D>
+public partial class ProcessMotCB3 : NodeComponent<CharacterBody3D, ProcessMotCB3>
 {
     [Export]
     protected ProcessMotImpl Impl;

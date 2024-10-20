@@ -6,7 +6,7 @@ namespace LGWCP.Godot.Liit;
 /// <summary>
 /// Hold move vel and rotY, set to parent CB3.
 /// </summary>
-public partial class RotMoveCB3 : NodeComponent<CharacterBody3D>
+public partial class RotMoveCB3 : NodeComponent<CharacterBody3D, RotMoveCB3>
 {
     public Vector3 Vel { get; set; }
     public float RotYAddup { get; set; }

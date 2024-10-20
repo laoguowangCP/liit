@@ -4,7 +4,7 @@ using LGWCP.Godot.Extensions;
 
 namespace LGWCP.Godot.Liit;
 
-public partial class Stater : NodeComponent<Node>
+public partial class Stater : NodeComponent<Node, Stater>
 {
     protected Statechart _sc;
 

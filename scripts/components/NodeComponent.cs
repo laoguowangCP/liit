@@ -1,11 +1,13 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 
 namespace LGWCP.Godot.Liit;
 
 
-public partial class NodeComponent<T> : Node, IComponent
-    where T : Node
+public partial class NodeComponent<TEntity, TComponent> : Node, IComponent
+    where TEntity : Node
+    where TComponent : NodeComponent<TEntity, TComponent>
 {
     /// <summary>
     /// If is submit, component will submit itself as parent node's component, while parent node will be submitted as entity.
@@ -15,19 +17,21 @@ public partial class NodeComponent<T> : Node, IComponent
 
     [ExportGroup("EventFlag")]
     [Export(PropertyHint.Flags, "Process,Physics Process,Input,Shortcut Input,UnhandledKey Input,Unhandled Input")]
-	public EventFlagEnum EventFlag { get; set; } = 0;
-
-    public T Entity { get; protected set; }
+    public EventFlagEnum EventFlag { get; set; } = 0;
+    public TEntity Entity { get; protected set; }
+    public LinkedListNode<IComponent> ComponentLLN;
 
     public Type Require()
     {
-        return typeof(T);
+        return typeof(TEntity);
     }
 
     public override void _Ready()
     {
-        Entity = GetParentOrNull<T>();
+        Entity = GetParentOrNull<TEntity>();
 
+        // TODO: not that useful, may delete
+        /*
         SetProcess(
 			EventFlag.HasFlag(EventFlagEnum.Process));
 		SetPhysicsProcess(
@@ -40,24 +44,26 @@ public partial class NodeComponent<T> : Node, IComponent
 			EventFlag.HasFlag(EventFlagEnum.UnhandledKeyInput));
 		SetProcessUnhandledInput(
 			EventFlag.HasFlag(EventFlagEnum.UnhandledInput));
+        */
 
         if (Entity is null)
         {
             #if DEBUG
-            GD.PushWarning(GetPath(), ": need parent with type ", typeof(T));
+            GD.PushWarning(GetPath(), ": need parent entity with type ", typeof(TEntity));
             #endif
             return;
         }
 
         if (IsSubmit)
         {
-            ICE.Manager.SubmitComponent<T>(Entity);
+            ICE.Manager.SubmitComponent<TEntity, TComponent>((TComponent)this);
         }
     }
 
     public override void _ExitTree()
     {
-        ICE.Manager.TryEraseEntity(Entity);
+        ICE.Manager.TryEraseComponent<TEntity, TComponent>((TComponent)this);
+        ICE.Manager.TryEraseEntity<TEntity>(Entity);
     }
 }
 

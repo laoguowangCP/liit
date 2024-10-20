@@ -1,15 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://cqrslchap4mtc"]
+[gd_scene load_steps=5 format=3 uid="uid://cqrslchap4mtc"]
 
 [ext_resource type="Script" path="res://scripts/entities/LiitPlayer.cs" id="1_i8igk"]
 [ext_resource type="Script" path="res://scripts/components/RotMoveCB3.cs" id="2_3e1tv"]
 [ext_resource type="Script" path="res://scripts/pool/TestPooly.cs" id="2_ou2fl"]
 [ext_resource type="Script" path="res://scripts/components/ProcessMotCB3.cs" id="3_ke6cm"]
-[ext_resource type="Script" path="res://scripts/resources/ProcessMotImpl.cs" id="4_vhxvx"]
-
-[sub_resource type="Resource" id="Resource_u7hpy"]
-script = ExtResource("4_vhxvx")
-JumpVelocity = 5.0
-GravityRatio = 1.0
 
 [node name="LiitPlayer" type="CharacterBody3D"]
 script = ExtResource("1_i8igk")
@@ -20,7 +14,6 @@ EventFlag = 2
 
 [node name="ProcessMotCB3" type="Node" parent="."]
 script = ExtResource("3_ke6cm")
-ProcessMot = SubResource("Resource_u7hpy")
 EventFlag = 63
 
 [node name="TestPooly" type="Node" parent="."]
