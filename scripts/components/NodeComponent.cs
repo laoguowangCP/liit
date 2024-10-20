@@ -15,9 +15,13 @@ public partial class NodeComponent<TEntity, TComponent> : Node, IComponent
     [Export]
     protected bool IsSubmit = false;
 
+
+    // TODO: not that useful, may delete
+    /*
     [ExportGroup("EventFlag")]
     [Export(PropertyHint.Flags, "Process,Physics Process,Input,Shortcut Input,UnhandledKey Input,Unhandled Input")]
     public EventFlagEnum EventFlag { get; set; } = 0;
+    */
     public TEntity Entity { get; protected set; }
     public LinkedListNode<IComponent> ComponentLLN;
 
@@ -67,6 +71,10 @@ public partial class NodeComponent<TEntity, TComponent> : Node, IComponent
     }
 }
 
+
+
+// TODO: not that useful, may delete
+/*
 [Flags]
 public enum EventFlagEnum
 {
@@ -77,3 +85,4 @@ public enum EventFlagEnum
     UnhandledKeyInput = 16,
     UnhandledInput = 32,
 }
+*/
