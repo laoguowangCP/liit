@@ -57,6 +57,7 @@ public class ICE
         
         if (isSubmitted)
         {
+            // TODO: take ComponentLLN is null into consideration
             bool isMono = dictTC.TryAdd(typeof(TComponent), component);
             if (isMono)
             {
@@ -91,6 +92,7 @@ public class ICE
         
         if (isSubmitted)
         {
+            // TODO: take ComponentLLN is null into consideration
             bool isMono = dictTC.TryAdd(typeof(TComponent), component);
             if (isMono)
             {
@@ -157,8 +159,13 @@ public class ICE
         }
 
         dict.TryGetValue(typeof(TComponent), out IComponent component);
-        if (component is TComponent t)
+        if (component is TComponent t && t.ComponentLLN is not null)
         {
+            /*
+            Component may be submitted but removed.
+            Removed if ComponentLLN is null (we make it null during removal).
+            DictETC is not updated since it is costy, and if new component with same type comes in it can still be handled
+            */
             return t;
         }
         else
@@ -193,6 +200,7 @@ public class ICE
 
         LinkedListNode<IComponent> llnC = component.ComponentLLN;
         llnC.List.Remove(llnC);
+        component.ComponentLLN = null;
         return true;
     }
 
