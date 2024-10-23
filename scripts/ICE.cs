@@ -37,19 +37,25 @@ public class ICE
     /// <typeparam name="TComponent"></typeparam>
     /// <param name="entity"></param>
     /// <returns></returns>
-    public bool SubmitComponent<TEntity, TComponent>(TEntity entity)
+    public void SubmitComponent<TEntity, TComponent>(TEntity entity)
         where TEntity : Node
         where TComponent : NodeComponent<TEntity, TComponent>
     {
         if (entity is null)
         {
-            return false;
+            return;
         }
         
         var component = entity.GetMonoOrNull<TComponent>();
         if (component is null)
         {
-            return false;
+            return;
+        }
+        
+        // Take ComponentLLN is null into consideration
+        if (component.ComponentLLN is null)
+        {
+            return;
         }
 
         Dictionary<Type, IComponent> dictTC;
@@ -57,14 +63,12 @@ public class ICE
         
         if (isSubmitted)
         {
-            // TODO: take ComponentLLN is null into consideration
-            bool isMono = dictTC.TryAdd(typeof(TComponent), component);
-            if (isMono)
-            {
-                // Submit to reversed map
-                SubmitComponentReversed<TEntity, TComponent>(component);
-            }
-            return isMono;
+            // Always cover old one
+            dictTC[typeof(TComponent)] = component;
+            
+            // Submit to reversed map
+            SubmitComponentReversed<TEntity, TComponent>(component);
+            return;
         }
         
         // New submit
@@ -74,17 +78,24 @@ public class ICE
         };
         DictETC.TryAdd(entity, dictTC);
         SubmitComponentReversed<TEntity, TComponent>(component);
-        return true;
+        return;
     }
 
-    public bool SubmitComponent<TEntity, TComponent>(TComponent component)
+    public void SubmitComponent<TEntity, TComponent>(TComponent component)
         where TEntity : Node
         where TComponent : NodeComponent<TEntity, TComponent>
     {
         if (component is null)
         {
-            return false;
+            return;
         }
+
+        // Take ComponentLLN is null into consideration
+        if (component.ComponentLLN is null)
+        {
+            return;
+        }
+
         TEntity entity = component.Entity;
 
         Dictionary<Type, IComponent> dictTC;
@@ -92,14 +103,12 @@ public class ICE
         
         if (isSubmitted)
         {
-            // TODO: take ComponentLLN is null into consideration
-            bool isMono = dictTC.TryAdd(typeof(TComponent), component);
-            if (isMono)
-            {
-                // Submit to reversed map
-                SubmitComponentReversed<TEntity, TComponent>(component);
-            }
-            return isMono;
+            // Always cover old one
+            dictTC[typeof(TComponent)] = component;
+            
+            // Submit to reversed map
+            SubmitComponentReversed<TEntity, TComponent>(component);
+            return;
         }
         
         // New submit
@@ -109,7 +118,7 @@ public class ICE
         };
         DictETC.TryAdd(entity, dictTC);
         SubmitComponentReversed<TEntity, TComponent>(component);
-        return true;
+        return;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -199,6 +208,11 @@ public class ICE
         }
 
         LinkedListNode<IComponent> llnC = component.ComponentLLN;
+        if (llnC is null)
+        {
+            return false;
+        }
+
         llnC.List.Remove(llnC);
         component.ComponentLLN = null;
         return true;

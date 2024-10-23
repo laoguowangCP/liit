@@ -10,10 +10,16 @@ public partial class NodeComponent<TEntity, TComponent> : Node, IComponent
     where TComponent : NodeComponent<TEntity, TComponent>
 {
     /// <summary>
-    /// If is submit, component will submit itself as parent node's component, while parent node will be submitted as entity.
+    /// If true, component will submit itself as parent node's component, while parent node will be submitted as entity.
     /// </summary>
     [Export]
     protected bool IsSubmit = false;
+
+    /// <summary>
+    /// If true, component will desubmit parent node entity.
+    /// </summary>
+    [Export]
+    protected bool IsEraseEntityOnLeave = false;
 
 
     // TODO: not that useful, may delete
@@ -23,6 +29,10 @@ public partial class NodeComponent<TEntity, TComponent> : Node, IComponent
     public EventFlagEnum EventFlag { get; set; } = 0;
     */
     public TEntity Entity { get; protected set; }
+
+    /// <summary>
+    /// Linked list node reference of this component in all components. Used for fast remove.
+    /// </summary>
     public LinkedListNode<IComponent> ComponentLLN;
 
     public Type Require()
@@ -66,8 +76,11 @@ public partial class NodeComponent<TEntity, TComponent> : Node, IComponent
 
     public override void _ExitTree()
     {
-        ICE.Manager.TryEraseComponent<TEntity, TComponent>((TComponent)this);
-        ICE.Manager.TryEraseEntity<TEntity>(Entity);
+        if (IsSubmit)
+        {
+            ICE.Manager.TryEraseComponent<TEntity, TComponent>((TComponent)this);
+        }
+            ICE.Manager.TryEraseEntity<TEntity>(Entity);
     }
 }
 
